@@ -43,7 +43,7 @@
   <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-white shadow">
     <a href="index.php#nosotros" class="block text-gray-700 hover:text-red-700">Nosotros</a>
     <a href="productos.php" class="block text-gray-700 hover:text-red-700">Productos</a>
-    <a href="marcas.php" class="block text-gray-700 hover:text-red-700">Marcas</a>
+    <a href="marca.php" class="block text-gray-700 hover:text-red-700">Marcas</a>
     <a href="index.php#contacto" class="block text-gray-700 hover:text-red-700">Contáctanos</a>
   </div>
 </nav>
