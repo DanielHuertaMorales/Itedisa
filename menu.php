@@ -44,6 +44,6 @@
     <a href="index.php#nosotros" class="block text-gray-700 hover:text-red-700">Nosotros</a>
     <a href="productos.php" class="block text-gray-700 hover:text-red-700">Productos</a>
     <a href="marca.php" class="block text-gray-700 hover:text-red-700">Marcas</a>
-    <a href="index.php#contacto" class="block text-gray-700 hover:text-red-700">Contáctanos</a>
+    <a href="contacto.php" class="block text-gray-700 hover:text-red-700">Contáctanos</a>
   </div>
 </nav>

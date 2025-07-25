@@ -1,40 +1,52 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+$success = '';
+$error = '';
+
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+require 'PHPMailer/Exception.php';
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    require 'includes/PHPMailer/PHPMailer.php';
-    require 'includes/PHPMailer/SMTP.php';
-    require 'includes/PHPMailer/Exception.php';
+    $nombre = trim(htmlspecialchars($_POST['nombre']));
+    $email = trim(htmlspecialchars($_POST['correo']));
+    $mensaje = trim(htmlspecialchars($_POST['mensaje']));
 
-    $nombre = htmlspecialchars($_POST['nombre']);
-    $email = htmlspecialchars($_POST['email']);
-    $mensaje = htmlspecialchars($_POST['mensaje']);
+    // Validación en servidor
+    if (empty($nombre) || empty($email) || empty($mensaje)) {
+        $error = "Por favor, completa todos los campos.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "El correo no es válido.";
+    } else {
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'mail.itedisa.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'daniel.huerta@itedisa.com';
+            $mail->Password   = 'Rchdhmc162419.';  
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
 
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.hostinger.com'; 
-        $mail->SMTPAuth = true;
-        $mail->Username = 'daniel.huerta@itedisa.com';
-        $mail->Password = 'Rchdhmc162419.'; // Cambiar
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
+            $mail->setFrom($email, $nombre);
+            $mail->addAddress('daniel.huerta@itedisa.com', 'ITEDISA');
 
-        $mail->setFrom($email, $nombre);
-        $mail->addAddress('daniel.huerta@itedisa.com', 'ITEDISA');
+            $mail->isHTML(true);
+            $mail->Subject = "Nuevo mensaje de $nombre";
+            $mail->Body    = "<strong>Nombre:</strong> $nombre <br>
+                              <strong>Email:</strong> $email <br><br>
+                              <strong>Mensaje:</strong><br>$mensaje";
 
-        $mail->isHTML(true);
-        $mail->Subject = "Nuevo mensaje de $nombre";
-        $mail->Body    = "<strong>Nombre:</strong> $nombre <br>
-                          <strong>Email:</strong> $email <br><br>
-                          <strong>Mensaje:</strong><br>$mensaje";
-
-        $mail->send();
-        $success = "¡Gracias por contactarnos! Te responderemos pronto.";
-    } catch (Exception $e) {
-        $error = "Error al enviar el mensaje: " . $mail->ErrorInfo;
+            $mail->send();
+            $success = "¡Gracias por contactarnos! Te responderemos pronto.";
+        } catch (Exception $e) {
+            $error = "Error al enviar el mensaje: " . $mail->ErrorInfo;
+        }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,108 +55,100 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <title>Contáctanos - ITEDISA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
+    body {
+      background: url('assets/fondoContacto.png') no-repeat center center fixed;
+      background-size: cover;
     }
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
-<body class="bg-gray-100 pt-[120px] flex flex-col min-h-screen">
+<body class="bg-gray-100 bg-opacity-90 pt-[120px] flex flex-col min-h-screen">
 
   <?php include 'menu.php'; ?>
 
-  <main class="flex-grow max-w-7xl mx-auto px-6 py-16">
-    <div class="grid md:grid-cols-2 gap-8 items-center">
-      
-      <!-- Imagen + Texto -->
-      <div class="relative">
-        <img src="assets/Clientsupport.png" alt="Atención al cliente ITEDISA" class="rounded-2xl shadow-lg">
-        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center p-6 rounded-2xl">
-          <h2 class="text-3xl font-bold text-white mb-4">Atención Personalizada</h2>
-          <p class="text-gray-200 text-lg text-justify">
-            En ITEDISA nos enorgullece ofrecer un servicio de atención al cliente rápido y eficaz. 
-            Nuestro equipo está siempre listo para resolver tus dudas y brindarte la mejor experiencia.
-          </p>
+  <main class="flex-grow flex justify-center items-center px-6 py-16">
+    <!-- Formulario Grande -->
+    <div class="bg-white shadow-xl rounded-2xl p-10 fade-in max-w-2xl w-full">
+      <h2 class="text-3xl font-bold text-red-800 mb-6 text-center">Envíanos un mensaje</h2>
+
+      <div id="result">
+        <?php if ($success): ?>
+          <p class="text-green-600 font-bold mb-4 text-center"><?= $success ?></p>
+        <?php elseif ($error): ?>
+          <p class="text-red-600 font-bold mb-4 text-center"><?= $error ?></p>
+        <?php endif; ?>
+      </div>
+
+      <form id="contactForm" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-gray-700 font-semibold">Nombre</label>
+          <input type="text" name="nombre" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-600" />
         </div>
-      </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Correo</label>
+          <input type="email" name="correo" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-600" />
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold">Mensaje</label>
+          <textarea name="mensaje" rows="5" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-red-600"></textarea>
+        </div>
 
-      <!-- Formulario -->
-      <div class="bg-white shadow-lg rounded-2xl p-8 fade-in">
-        <h2 class="text-2xl font-bold text-red-800 mb-6">Envíanos un mensaje</h2>
-        <form id="contactForm" class="space-y-4">
-          <div>
-            <label class="block text-gray-700 font-semibold">Nombre</label>
-            <input type="text" name="nombre" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-600" />
-          </div>
-          <div>
-            <label class="block text-gray-700 font-semibold">Correo</label>
-            <input type="email" name="correo" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-600" />
-          </div>
-          <div>
-            <label class="block text-gray-700 font-semibold">Mensaje</label>
-            <textarea name="mensaje" rows="4" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-red-600"></textarea>
-          </div>
+        <p id="clientError" class="hidden text-red-600 font-bold"></p>
 
-          <!-- Spinner de carga -->
-          <div id="loading" class="hidden text-center">
-            <div class="inline-block w-6 h-6 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-gray-600 mt-2">Enviando mensaje...</p>
-          </div>
-
-          <!-- Mensajes de resultado -->
-          <div id="result" class="hidden mt-4 text-center font-semibold"></div>
-
-          <button type="submit" class="w-full bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
-            Enviar mensaje
-          </button>
-        </form>
-      </div>
+        <button type="submit" class="w-full bg-red-700 text-white py-3 rounded-lg hover:bg-red-800 transition">
+          Enviar mensaje
+        </button>
+      </form>
     </div>
   </main>
 
+  <!-- Footer --> 
+  <footer class="bg-gray-900 text-gray-300 py-10 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex space-x-6">
+        <a href="https://www.facebook.com/people/Itedisa-SA-de-CV/100090168609896/?sk=about" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:text-blue-600 transition">
+          <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54v-2.89h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.464h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.99 22 12z"/></svg>
+        </a>
+        <a href="https://mx.linkedin.com/company/itedisasadecv" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="hover:text-blue-400 transition">
+          <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.762 0 5-2.24 5-5v-14c0-2.76-2.238-5-5-5zm-11.75 20h-3v-11h3v11zm-1.5-12.22c-.967 0-1.75-.783-1.75-1.75s.783-1.75 1.75-1.75 1.75.783 1.75 1.75-.783 1.75-1.75 1.75zm13.25 12.22h-3v-5.5c0-1.38-.02-3.15-1.92-3.15-1.92 0-2.22 1.5-2.22 3.05v5.6h-3v-11h2.88v1.5h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.6v6.44z"/></svg>
+        </a>
+      </div>
+      <div class="text-center md:text-left">
+        <p class="font-semibold">Contacto:</p>
+        <a href="mailto:contacto@itedisa.com" class="hover:text-red-600 transition">contacto@itedisa.com</a>
+      </div>
+      <div class="text-center text-sm text-gray-500">
+        &copy; <?php echo date('Y'); ?> ITEDISA. Hecho con <span class="text-red-600">❤️</span>.
+      </div>
+    </div>
+  </footer> 
+
   <script>
     const form = document.getElementById('contactForm');
-    const loading = document.getElementById('loading');
-    const result = document.getElementById('result');
+    const clientError = document.getElementById('clientError');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    form.addEventListener('submit', (e) => {
+      const nombre = form.nombre.value.trim();
+      const correo = form.correo.value.trim();
+      const mensaje = form.mensaje.value.trim();
 
-      loading.classList.remove('hidden');
-      result.classList.add('hidden');
-      
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch('enviar_contacto.php', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-        loading.classList.add('hidden');
-        result.classList.remove('hidden');
-
-        if (data.success) {
-          result.textContent = "¡Mensaje enviado correctamente!";
-          result.className = "text-green-600 font-bold";
-          form.reset();
-        } else {
-          result.textContent = "Hubo un error al enviar el mensaje.";
-          result.className = "text-red-600 font-bold";
-        }
-      } catch (error) {
-        loading.classList.add('hidden');
-        result.classList.remove('hidden');
-        result.textContent = "Error de conexión.";
-        result.className = "text-red-600 font-bold";
+      if (!nombre || !correo || !mensaje) {
+        e.preventDefault();
+        clientError.textContent = "Por favor completa todos los campos.";
+        clientError.classList.remove('hidden');
+      } else if (!/\S+@\S+\.\S+/.test(correo)) {
+        e.preventDefault();
+        clientError.textContent = "Por favor ingresa un correo válido.";
+        clientError.classList.remove('hidden');
+      } else {
+        clientError.classList.add('hidden');
       }
     });
   </script>
 
 </body>
 </html>
-
