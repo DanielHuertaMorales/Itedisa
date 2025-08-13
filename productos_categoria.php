@@ -1,6 +1,16 @@
 <?php 
 include "includes/db.php";
 $categoria = $_GET['cat'] ?? '';
+
+// Obtener subcategorías de la categoría actual
+$stmtSub = $conn->prepare("SELECT id, nombre FROM subcategorias WHERE categoria_id = (SELECT id FROM categorias WHERE nombre = ?) ORDER BY nombre");
+$stmtSub->bind_param("s", $categoria);
+$stmtSub->execute();
+$resultSub = $stmtSub->get_result();
+$subcategorias = [];
+while ($row = $resultSub->fetch_assoc()) {
+    $subcategorias[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -39,7 +49,16 @@ $categoria = $_GET['cat'] ?? '';
 
     <!-- Sección de productos -->
     <section class="w-full lg:w-3/4">
-      <h1 class="text-2xl font-bold mb-4">Productos: <?php echo htmlspecialchars($categoria); ?></h1>
+      <h1 class="text-2xl font-bold mb-4 flex items-center justify-between">
+        <span>Productos: <?php echo htmlspecialchars($categoria); ?></span>
+        
+        <select id="selectSubcategoria" class="border border-gray-300 rounded px-2 py-1 text-sm ml-4">
+          <option value="">Todas las subcategorías</option>
+          <?php foreach ($subcategorias as $sub): ?>
+            <option value="<?php echo $sub['id']; ?>"><?php echo htmlspecialchars($sub['nombre']); ?></option>
+          <?php endforeach; ?>
+        </select>
+      </h1>
       <div id="productos-lista" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Aquí se cargan los productos con AJAX -->
       </div>
@@ -99,15 +118,16 @@ $categoria = $_GET['cat'] ?? '';
   </footer>
 
   <script>
-    const categoria = "<?php echo $categoria; ?>";
+    const categoria = "<?php echo addslashes($categoria); ?>";
 
-    function cargarProductos(marcas = [], pagina = 1) {
+    function cargarProductos(marcas = [], subcategoria = '', pagina = 1) {
       $.ajax({
         url: 'ajax_productos_categoria.php',
         method: 'POST',
         data: {
           categoria,
           marcas,
+          subcategoria,
           pagina
         },
         success: function (res) {
@@ -121,11 +141,14 @@ $categoria = $_GET['cat'] ?? '';
     $(document).ready(function () {
       cargarProductos();
 
-      $(document).on('change', '.marca-filter', function () {
+      $(document).on('change', '.marca-filter, #selectSubcategoria', function () {
         const marcasSeleccionadas = $('.marca-filter:checked').map(function () {
           return $(this).val();
         }).get();
-        cargarProductos(marcasSeleccionadas);
+
+        const subcategoriaSeleccionada = $('#selectSubcategoria').val();
+
+        cargarProductos(marcasSeleccionadas, subcategoriaSeleccionada);
       });
 
       $(document).on('click', '.paginacion-link', function (e) {
@@ -134,7 +157,10 @@ $categoria = $_GET['cat'] ?? '';
         const marcasSeleccionadas = $('.marca-filter:checked').map(function () {
           return $(this).val();
         }).get();
-        cargarProductos(marcasSeleccionadas, page);
+
+        const subcategoriaSeleccionada = $('#selectSubcategoria').val();
+
+        cargarProductos(marcasSeleccionadas, subcategoriaSeleccionada, page);
       });
 
       // Off-canvas de filtros

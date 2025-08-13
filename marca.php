@@ -32,15 +32,15 @@ $result = $conn->query($sql);
 
     <div id="contenedor-marcas" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <?php while($marca = $result->fetch_assoc()): ?>
-        <a href="productos_marca.php?marca=<?php echo urlencode($marca['nombre']); ?>"
-           class="marca group block rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white"
-           data-nombre="<?php echo strtolower($marca['nombre']); ?>">
+        <a href="productos_marca.php?id_marca=<?php echo $marca['id']; ?>"
+          class="marca group block rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 bg-white"
+          data-nombre="<?php echo strtolower($marca['nombre']); ?>">
 
           <!-- Imagen de la marca -->
           <div class="h-40 flex items-center justify-center overflow-hidden bg-gray-100">
             <img src="assets/img/marcas/<?php echo htmlspecialchars($marca['imagen']); ?>"
-                 alt="<?php echo htmlspecialchars($marca['nombre']); ?>"
-                 class="w-full h-full object-cover group-hover:scale-110 transform transition duration-300" />
+                alt="<?php echo htmlspecialchars($marca['nombre']); ?>"
+                class="w-full h-full object-cover group-hover:scale-110 transform transition duration-300" />
           </div>
 
           <div class="p-4 text-center">

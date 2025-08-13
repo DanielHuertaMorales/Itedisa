@@ -4,11 +4,12 @@ include "includes/db.php";
 $id = $_GET['id'] ?? 0;
 $id = intval($id);
 
-// Obtener detalles del producto
+// Obtener detalles del producto, incluyendo categoria_id
 $stmt = $conn->prepare("
-  SELECT p.*, m.nombre as marca_nombre 
+  SELECT p.*, m.nombre as marca_nombre, s.categoria_id
   FROM productos p 
   JOIN marcas m ON p.id_marca = m.id 
+  JOIN subcategorias s ON p.id_subcategoria = s.id
   WHERE p.id = ?
 ");
 $stmt->bind_param("i", $id);
@@ -22,17 +23,20 @@ if (!$producto) {
 }
 
 // Obtener productos recomendados de la misma categoría, excluyendo el actual
+$categoria_id = $producto['categoria_id'];
 $stmtRec = $conn->prepare("
   SELECT p.id, p.nombre, p.imagen, m.nombre as marca_nombre 
   FROM productos p 
-  JOIN marcas m ON p.id_marca = m.id 
-  WHERE p.id_categoria = ? AND p.id != ? 
+  JOIN marcas m ON p.id_marca = m.id
+  JOIN subcategorias s ON p.id_subcategoria = s.id
+  WHERE s.categoria_id = ? AND p.id != ? 
   ORDER BY RAND() LIMIT 6
 ");
-$stmtRec->bind_param("ii", $producto['id_categoria'], $id);
+$stmtRec->bind_param("ii", $categoria_id, $id);
 $stmtRec->execute();
 $recomendados = $stmtRec->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -61,27 +65,45 @@ $recomendados = $stmtRec->get_result();
   <main class="flex flex-col lg:flex-row pt-10 px-6 pb-16 gap-8 flex-grow">
     <!-- Detalle producto -->
     <section class="w-full lg:w-3/4 bg-white rounded-2xl shadow-md p-6">
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Imagen a la izquierda -->
-            <div class="lg:w-1/2 flex justify-center items-center">
-              <img src="assets/img/productos/<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                  alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                  class="w-full max-h-[400px] object-contain rounded-xl" />
-            </div>
-
-            <!-- Texto a la derecha -->
-            <div class="lg:w-1/2 flex flex-col justify-center">
-              <h1 class="text-3xl font-bold mb-6 text-red-900"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-              <p class="text-gray-700 mb-6"><?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?></p>
-
-              <?php if (!empty($producto['ficha_tecnica'])): ?>
-                  <a href="<?php echo htmlspecialchars($producto['ficha_tecnica']); ?>" target="_blank" class="text-blue-600 hover:underline mt-4 block">
-                  Ver ficha técnica (PDF)
-                  </a>
-              <?php endif; ?>
-            </div>
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Imagen -->
+        <div class="lg:w-1/2 flex justify-center items-center">
+          <img src="assets/img/productos/<?php echo htmlspecialchars($producto['imagen']); ?>" 
+              alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
+              class="w-full max-h-[400px] object-contain rounded-xl" />
         </div>
+
+        <!-- Info principal -->
+        <div class="lg:w-1/2 flex flex-col justify-center">
+          <h1 class="text-3xl font-bold mb-6 text-red-900"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
+          
+          <?php if (!empty($producto['descripcion'])): ?>
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Descripción</h2>
+            <p class="text-gray-700 mb-6 whitespace-pre-line"><?php echo htmlspecialchars($producto['descripcion']); ?></p>
+          <?php endif; ?>
+
+          <?php if (!empty($producto['caracteristicas'])): ?>
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Características</h2>
+            <ul class="list-disc list-inside text-gray-700 mb-6">
+              <?php foreach (explode("\n", $producto['caracteristicas']) as $caracteristica): ?>
+                <?php if (trim($caracteristica)) : ?>
+                  <li><?php echo htmlspecialchars(trim($caracteristica)); ?></li>
+                <?php endif; ?>
+              <?php endforeach; ?>
+            </ul>
+          <?php endif; ?>
+
+          <?php if (!empty($producto['ficha_tecnica_url'])): ?>
+            <a href="<?php echo htmlspecialchars($producto['ficha_tecnica_url']); ?>" 
+              target="_blank" 
+              class="inline-block px-5 py-2 mt-4 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 hover:scale-105 transform transition duration-300">
+              📄 Ver ficha técnica
+            </a>
+          <?php endif; ?>
+        </div>
+      </div>
     </section>
+
 
     <!-- Productos recomendados - Escritorio -->
     <aside class="hidden lg:block lg:w-96 bg-white rounded-xl shadow-md p-4 self-start sticky top-28 max-h-[calc(100vh-150px)] overflow-y-auto">

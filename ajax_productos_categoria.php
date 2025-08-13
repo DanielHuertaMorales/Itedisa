@@ -4,6 +4,9 @@ include "includes/db.php";
 $categoria = $_POST['categoria'] ?? '';
 $marcas = $_POST['marcas'] ?? [];
 $pagina = $_POST['pagina'] ?? 1;
+$subcategoria = $_POST['subcategoria'] ?? '';
+
+$pagina = intval($pagina);
 $porPagina = 6;
 $offset = ($pagina - 1) * $porPagina;
 
@@ -15,40 +18,63 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $id_categoria = $row['id'] ?? 0;
 
-// Contar total productos
-$sqlCount = "SELECT COUNT(*) as total FROM productos WHERE id_categoria = ?";
+if ($id_categoria === 0) {
+    echo json_encode(['html' => '<p>Categoría no válida.</p>', 'paginacion' => '']);
+    exit;
+}
+
+// Construir la consulta para contar total productos
+$sqlCount = "SELECT COUNT(*) as total 
+             FROM productos p
+             JOIN subcategorias s ON p.id_subcategoria = s.id
+             WHERE s.categoria_id = ?";
+
 $params = [$id_categoria];
 $types = "i";
 
+if ($subcategoria !== '') {
+    $sqlCount .= " AND p.id_subcategoria = ?";
+    $params[] = $subcategoria;
+    $types .= "i";
+}
+
 if (!empty($marcas)) {
     $placeholders = implode(',', array_fill(0, count($marcas), '?'));
-    $sqlCount .= " AND id_marca IN ($placeholders)";
-    $params = array_merge([$id_categoria], $marcas);
+    $sqlCount .= " AND p.id_marca IN ($placeholders)";
+    $params = array_merge($params, $marcas);
     $types .= str_repeat("i", count($marcas));
 }
 
-$stmt = $conn->prepare($sqlCount);
-$stmt->bind_param($types, ...$params);
-$stmt->execute();
-$total = $stmt->get_result()->fetch_assoc()['total'];
+$stmtCount = $conn->prepare($sqlCount);
+$stmtCount->bind_param($types, ...$params);
+$stmtCount->execute();
+$total = $stmtCount->get_result()->fetch_assoc()['total'];
 $totalPaginas = ceil($total / $porPagina);
 
-// Obtener productos paginados
-$sql = "SELECT productos.*, marcas.nombre AS marca_nombre 
-        FROM productos 
-        JOIN marcas ON productos.id_marca = marcas.id 
-        WHERE productos.id_categoria = ?";
+// Construir consulta para obtener productos paginados
+$sql = "SELECT p.*, m.nombre AS marca_nombre 
+        FROM productos p 
+        JOIN marcas m ON p.id_marca = m.id 
+        JOIN subcategorias s ON p.id_subcategoria = s.id
+        WHERE s.categoria_id = ?";
+
 $params = [$id_categoria];
 $types = "i";
 
+if ($subcategoria !== '') {
+    $sql .= " AND p.id_subcategoria = ?";
+    $params[] = $subcategoria;
+    $types .= "i";
+}
+
 if (!empty($marcas)) {
     $placeholders = implode(',', array_fill(0, count($marcas), '?'));
-    $sql .= " AND productos.id_marca IN ($placeholders)";
-    $params = array_merge([$id_categoria], $marcas);
+    $sql .= " AND p.id_marca IN ($placeholders)";
+    $params = array_merge($params, $marcas);
     $types .= str_repeat("i", count($marcas));
 }
 
-$sql .= " LIMIT ? OFFSET ?";
+$sql .= " ORDER BY p.nombre ASC LIMIT ? OFFSET ?";
 $params[] = $porPagina;
 $params[] = $offset;
 $types .= "ii";
@@ -59,18 +85,22 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $html = '';
-while ($row = $result->fetch_assoc()) {
-    $html .= '
-    <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-xl transition duration-300 flex flex-col">
-      <img src="assets/img/productos/' . $row['imagen'] . '" alt="' . $row['nombre'] . '" class="w-full h-40 object-contain mb-4 rounded-lg" />
-      <h3 class="text-lg font-bold text-red-900">' . $row['nombre'] . '</h3>
-      <p class="text-sm text-gray-500 mb-2">Marca: ' . $row['marca_nombre'] . '</p>
-      <p class="text-gray-700 text-sm mb-4 line-clamp-3">' . $row['descripcion'] . '</p>
-      <a href="producto_detalle.php?id=' . $row['id'] . '" 
-        class="mt-auto inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-center">
-        Ver más
-      </a>
-    </div>';
+if ($result->num_rows === 0) {
+    $html = '<p class="text-gray-600 col-span-full">No se encontraron productos.</p>';
+} else {
+    while ($row = $result->fetch_assoc()) {
+        $html .= '
+        <div class="bg-white rounded-2xl shadow-md p-4 hover:shadow-xl transition duration-300 flex flex-col">
+          <img src="assets/img/productos/' . htmlspecialchars($row['imagen']) . '" alt="' . htmlspecialchars($row['nombre']) . '" class="w-full h-40 object-contain mb-4 rounded-lg" />
+          <h3 class="text-lg font-bold text-red-900">' . htmlspecialchars($row['nombre']) . '</h3>
+          <p class="text-sm text-gray-500 mb-2">Marca: ' . htmlspecialchars($row['marca_nombre']) . '</p>
+          <p class="text-gray-700 text-sm mb-4 line-clamp-3">' . htmlspecialchars($row['descripcion']) . '</p>
+          <a href="producto_detalle.php?id=' . $row['id'] . '" 
+            class="mt-auto inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-center">
+            Ver más
+          </a>
+        </div>';
+    }
 }
 
 // Paginación
