@@ -19,14 +19,21 @@
         <a href="contacto.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-xl px-4 py-2">Contáctanos</a>
       </div>
 
-      <!-- Language Selector -->
-      <div class="ml-4">
-        <select id="langSelect" class="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-600">
-          <option value="es">Español</option>
-          <option value="en">English</option>
-        </select>
-      </div>
-
+      <!-- Language Selector + Carrito -->
+      <!-- <div class="flex items-center space-x-4">
+        < Selector de idioma -->
+      
+      <a href="cotizar.php" class="relative group" id="carritoIcono">
+        <!-- Bolsa de compras minimalista -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 group-hover:text-red-700 transition-transform transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 10-8 0v4M5 11h14l1 10H4L5 11z"/>
+        </svg>
+        <!-- Contador de productos -->
+        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+          0
+        </span>
+      </a>
+      
       <!-- Mobile menu button -->
       <div class="md:hidden">
         <button id="menuBtn" class="text-gray-700 focus:outline-none">
@@ -45,5 +52,6 @@
     <a href="productos.php" class="block text-gray-700 hover:text-red-700">Productos</a>
     <a href="marca.php" class="block text-gray-700 hover:text-red-700">Marcas</a>
     <a href="contacto.php" class="block text-gray-700 hover:text-red-700">Contáctanos</a>
+    <a href="cotizar.php" class="block text-gray-700 hover:text-red-700">🛒 Cotización</a>
   </div>
 </nav>

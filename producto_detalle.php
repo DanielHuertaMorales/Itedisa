@@ -1,10 +1,11 @@
 <?php
+session_start();
 include "includes/db.php";
 
 $id = $_GET['id'] ?? 0;
 $id = intval($id);
 
-// Obtener detalles del producto, incluyendo categoria_id
+// Obtener detalles del producto
 $stmt = $conn->prepare("
   SELECT p.*, m.nombre as marca_nombre, s.categoria_id
   FROM productos p 
@@ -22,7 +23,7 @@ if (!$producto) {
     exit;
 }
 
-// Obtener productos recomendados de la misma categoría, excluyendo el actual
+// Obtener recomendados
 $categoria_id = $producto['categoria_id'];
 $stmtRec = $conn->prepare("
   SELECT p.id, p.nombre, p.imagen, m.nombre as marca_nombre 
@@ -36,7 +37,6 @@ $stmtRec->bind_param("ii", $categoria_id, $id);
 $stmtRec->execute();
 $recomendados = $stmtRec->get_result();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -92,14 +92,23 @@ $recomendados = $stmtRec->get_result();
               <?php endforeach; ?>
             </ul>
           <?php endif; ?>
+          <div class="flex space-x-4 mt-6">
+              <?php if (!empty($producto['ficha_tecnica_url'])): ?>
+                  <a href="<?php echo htmlspecialchars($producto['ficha_tecnica_url']); ?>" 
+                      target="_blank" 
+                      class="inline-block px-5 py-2 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 hover:scale-105 transform transition duration-300">
+                      📄 Ver ficha técnica
+                  </a>
+              <?php endif; ?>
 
-          <?php if (!empty($producto['ficha_tecnica_url'])): ?>
-            <a href="<?php echo htmlspecialchars($producto['ficha_tecnica_url']); ?>" 
-              target="_blank" 
-              class="inline-block px-5 py-2 mt-4 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 hover:scale-105 transform transition duration-300">
-              📄 Ver ficha técnica
-            </a>
-          <?php endif; ?>
+              <!-- Botón Cotizar -->
+              <button 
+                  onclick="agregarACotizacion(this, <?php echo $producto['id']; ?>)" 
+                  class="px-5 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 transform hover:scale-110 animate-bounce-once">
+                  💰 Cotizar
+              </button>
+          </div>
+
         </div>
       </div>
     </section>
@@ -159,3 +168,51 @@ $recomendados = $stmtRec->get_result();
 
 </body>
 </html>
+
+<!-- Script para agregar producto a cotizar -->
+<script>
+function agregarACotizacion(btn, idProducto) {
+    fetch('agregar_a_cotizacion.php', {
+        method: 'POST',
+        body: new URLSearchParams({ id: idProducto })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Crear badge flotante
+            const badge = document.createElement('span');
+            badge.textContent = "+1 Agregado";
+            badge.className = "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full text-white bg-green-600 px-3 py-1 rounded-full text-sm font-bold animate-fade-up";
+
+            // Asegurar que el botón tenga position relative
+            btn.style.position = "relative";
+
+            // Agregar badge al botón
+            btn.appendChild(badge);
+
+            // Remover badge después de 1.2s
+            setTimeout(() => badge.remove(), 1200);
+
+            // Cambiar color temporal del botón
+            btn.classList.add('bg-green-800');
+            setTimeout(() => btn.classList.remove('bg-green-800'), 500);
+        } else {
+            alert("Error al agregar el producto a cotización");
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
+
+<!-- Estilo para animación bounce única -->
+<style>
+@keyframes fade-up {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-20px); opacity: 0; }
+}
+
+.animate-fade-up {
+    animation: fade-up 1.2s ease forwards;
+}
+</style>
