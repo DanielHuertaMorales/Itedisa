@@ -22,17 +22,11 @@ function subirImagen($campo) {
 
     $nombreTmp = $_FILES[$campo]['tmp_name'];
     $nombreOriginal = basename($_FILES[$campo]['name']);
-    $ext = pathinfo($nombreOriginal, PATHINFO_EXTENSION);
-    $nuevoNombre = uniqid('cat_') . '.' . strtolower($ext);
+    $ext = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+    $nuevoNombre = uniqid('cat_') . '.' . $ext;
 
-    // Base path al proyecto industrial-website
-    $basePath = realpath(__DIR__ . '/../../'); // Ajusta según la ubicación real de tu script
-
-    $rutaDestino = $basePath 
-        . DIRECTORY_SEPARATOR . 'assets' 
-        . DIRECTORY_SEPARATOR . 'img' 
-        . DIRECTORY_SEPARATOR . 'categorias' 
-        . DIRECTORY_SEPARATOR . $nuevoNombre;
+    // Ruta absoluta al directorio de imágenes
+    $rutaDestino = __DIR__ . '/../assets/img/categorias/' . $nuevoNombre;
 
     if (!is_dir(dirname($rutaDestino))) {
         mkdir(dirname($rutaDestino), 0777, true);
@@ -44,7 +38,6 @@ function subirImagen($campo) {
 
     return null;
 }
-
 
 switch ($action) {
     case 'agregar':
@@ -77,11 +70,11 @@ switch ($action) {
         }
 
         if ($imagen) {
-            // Actualiza con imagen
+            // Actualiza con imagen nueva
             $stmt = $conexion->prepare("UPDATE categorias SET nombre = ?, imagen = ? WHERE id = ?");
             $stmt->bind_param("ssi", $nombre, $imagen, $id);
         } else {
-            // Actualiza sin cambiar imagen
+            // Sin cambiar imagen
             $stmt = $conexion->prepare("UPDATE categorias SET nombre = ? WHERE id = ?");
             $stmt->bind_param("si", $nombre, $id);
         }
@@ -100,9 +93,29 @@ switch ($action) {
             echo json_encode(['success' => false, 'mensaje' => 'ID inválido']);
             exit;
         }
+
+        // Primero obtenemos la imagen para borrarla del disco
+        $query = $conexion->prepare("SELECT imagen FROM categorias WHERE id = ?");
+        $query->bind_param("i", $id);
+        $query->execute();
+        $result = $query->get_result();
+        $imagen = '';
+        if ($row = $result->fetch_assoc()) {
+            $imagen = $row['imagen'];
+        }
+        $query->close();
+
         $stmt = $conexion->prepare("DELETE FROM categorias WHERE id = ?");
         $stmt->bind_param("i", $id);
         if ($stmt->execute()) {
+            // Eliminar la imagen física (si existe)
+            if ($imagen) {
+                $rutaImagen = __DIR__ . '/../assets/img/categorias/' . $imagen;
+                if (file_exists($rutaImagen)) {
+                    unlink($rutaImagen);
+                }
+            }
+
             echo json_encode(['success' => true, 'mensaje' => 'Categoría eliminada correctamente']);
         } else {
             echo json_encode(['success' => false, 'mensaje' => 'Error al eliminar categoría']);

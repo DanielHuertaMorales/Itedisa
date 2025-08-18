@@ -22,6 +22,8 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
 <!-- jQuery y DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<!-- Font Awesome (para íconos como fa-thumbtack) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 </head>
@@ -77,8 +79,8 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
   </div>
 
   <div>
-    <label>URL Ficha Técnica</label>
-    <input type="url" name="ficha_tecnica_url" id="ficha_tecnica_url" class="border rounded w-full p-2" placeholder="https://ejemplo.com/ficha.pdf">
+  <label>Ficha Técnica (PDF)</label>
+    <input type="file" name="ficha_tecnica_file" id="ficha_tecnica_file" class="border rounded w-full p-2" accept=".pdf">
   </div>
 
   <div>
@@ -89,6 +91,9 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
   <div class="col-span-2 flex justify-end">
     <button type="submit" id="btnEnviar" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
       Agregar producto
+    </button>
+    <button type="button" id="btnGuardarConfig" title="Guardar configuración">
+      <i class="fas fa-thumbtack"></i> 
     </button>
     <button type="button" id="btnCancelarEdicion" class="hidden ml-4 px-6 py-2 rounded border border-gray-400 hover:bg-gray-200">
       Cancelar
@@ -128,8 +133,8 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
       <td class="border p-2"><?= htmlspecialchars($prod['caracteristicas']) ?></td>
       <td class="border p-2 text-center">
         <?php if (!empty($prod['ficha_tecnica_url'])): ?>
-          <a href="<?= htmlspecialchars($prod['ficha_tecnica_url']) ?>" target="_blank" title="Ver ficha técnica" class="text-blue-600 hover:text-blue-800">
-            🔗
+          <a href="<?= '../admin/assets/fichas/' . htmlspecialchars($prod['ficha_tecnica_url']) ?>" target="_blank">
+            📄
           </a>
         <?php else: ?>
           -
@@ -275,6 +280,8 @@ form.addEventListener('submit', function(e){
 // Inicializar DataTable con paginación y búsqueda
 $(document).ready(function() {
   $('#tablaProductos').DataTable({
+    ordering: true,     // Habilita el ordenamiento (por columnas)
+    searching: true,
     pageLength: 5,
     lengthMenu: [5, 10, 25],
     language: {
@@ -332,6 +339,24 @@ function activarEventosEliminar(){
   });
 }
 activarEventosEliminar();
+
+document.getElementById('btnGuardarConfig').addEventListener('click', () => {
+    const formData = new FormData();
+    formData.append('guardar_configuracion', '1');
+    formData.append('categoria_id', document.getElementById('categoria_id').value);
+    formData.append('subcategoria_id', document.getElementById('subcategoria_id').value);
+    formData.append('marca_id', document.getElementById('marca_id').value);
+
+    fetch('guardar_producto_temp.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        alert(data.mensaje); // puedes usar un toast también
+    });
+});
+
 </script>
 
 </body>

@@ -50,7 +50,7 @@ $result = mysqli_query($conexion, $query);
       <td class="border p-2"><?= htmlspecialchars($row['nombre']) ?></td>
       <td class="border p-2 text-center">
         <?php if (!empty($row['imagen'])): ?>
-          <img src="assets/img/categorias/<?= htmlspecialchars($row['imagen']) ?>" class="mx-auto w-16 h-16 object-cover rounded" alt="Imagen categoría">
+          <img src="../assets/img/categorias/<?= htmlspecialchars($row['imagen']) ?>" class="mx-auto w-16 h-16 object-cover rounded" alt="Imagen categoría">
         <?php else: ?>
           <span class="text-gray-400">Sin imagen</span>
         <?php endif; ?>

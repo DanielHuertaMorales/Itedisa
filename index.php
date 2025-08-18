@@ -103,6 +103,31 @@
       </div>
     </section>
 
+    <!-- Testimonios -->
+    <section class="bg-gray-100 py-16">
+      <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-4xl sm:text-5xl font-bold text-red-600 mb-12">Lo que dicen nuestros clientes</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Testimonio 1 -->
+          <div class="bg-white rounded-2xl shadow-xl p-6">
+            <p class="text-gray-700 mb-4 italic">"Excelente atención al cliente y productos de alta calidad. Muy satisfechos con la entrega rápida."</p>
+            <div class="font-bold text-red-700">Ingeniería Futura S.A.</div>
+          </div>
+          <!-- Testimonio 2 -->
+          <div class="bg-white rounded-2xl shadow-xl p-6">
+            <p class="text-gray-700 mb-4 italic">"ITEDISA se convirtió en nuestro proveedor principal por su profesionalismo y puntualidad."</p>
+            <div class="font-bold text-red-700">Proyectos Industriales MX</div>
+          </div>
+          <!-- Testimonio 3 -->
+          <div class="bg-white rounded-2xl shadow-xl p-6">
+            <p class="text-gray-700 mb-4 italic">"Productos confiables y un equipo que realmente entiende nuestras necesidades técnicas."</p>
+            <div class="font-bold text-red-700">Soluciones Petroquímicas</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
     <!-- Marcas -->
     <section class="w-full h-[220px] md:h-[300px] bg-[url('assets/marcas.png')] bg-cover bg-center bg-no-repeat md:bg-fixed relative group">
       <div class="absolute inset-0 bg-black/60 transition duration-500 group-hover:backdrop-blur-sm group-hover:bg-black/70"></div>
@@ -117,6 +142,28 @@
         </div>
       </div>
     </section>
+
+    <!-- Servicios -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 text-center">
+        <h2 class="text-4xl sm:text-5xl font-bold text-red-600 mb-12">Nuestros Servicios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
+            <h3 class="text-2xl font-bold mb-3 text-gray-800">Asesoría técnica</h3>
+            <p class="text-gray-700">Te ayudamos a elegir el producto ideal según tus necesidades específicas y condiciones técnicas.</p>
+          </div>
+          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
+            <h3 class="text-2xl font-bold mb-3 text-gray-800">Instalación y puesta en marcha</h3>
+            <p class="text-gray-700">Contamos con personal técnico capacitado para garantizar una instalación correcta y segura.</p>
+          </div>
+          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
+            <h3 class="text-2xl font-bold mb-3 text-gray-800">Capacitación</h3>
+            <p class="text-gray-700">Brindamos entrenamientos para que tu equipo opere con confianza los equipos adquiridos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- Productos más vendidos -->
     <section class="max-w-[1600px] mx-auto px-4 md:px-10 py-16">
@@ -153,6 +200,16 @@
         </div>
       </div>
     </section>
+
+    <!-- CTA final -->
+    <section class="relative bg-red-700 py-20 text-white text-center">
+      <div class="max-w-5xl mx-auto px-4">
+        <h2 class="text-4xl sm:text-5xl font-bold mb-6">¿Listo para llevar tu industria al siguiente nivel?</h2>
+        <p class="text-lg sm:text-xl mb-8">Contáctanos hoy mismo y deja que nuestros expertos te asesoren.</p>
+        <a href="contacto.php" class="bg-white text-red-700 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition">Solicita tu cotización</a>
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->

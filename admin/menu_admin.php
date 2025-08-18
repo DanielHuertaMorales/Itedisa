@@ -27,7 +27,7 @@ include_once(__DIR__ . '/../config.php');
         <a href="agregar_productos_manual.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
           Agregar Productos
         </a>
-        <a href="agregar_productos_manual.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
+        <a href="productos.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
           Productos
         </a>
         <a href="categorias.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
@@ -35,6 +35,9 @@ include_once(__DIR__ . '/../config.php');
         </a>
         <a href="subcategorias.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
           Subcategorías
+        </a>
+        <a href="marcas.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
+          Marcas
         </a>
         <a href="logout.php" class="text-gray-700 hover:text-red-700 transition font-semibold text-lg px-4 py-2">
           Salir
@@ -55,7 +58,11 @@ include_once(__DIR__ . '/../config.php');
 
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-white shadow">
-    <a href="subir_pdf.php#nosotros" class="block text-gray-700 hover:text-red-700">Nosotros</a>
-    <a href="logout.php" class="block text-gray-700 hover:text-red-700">Productos</a>
+    <a href="agregar_productos_manual.php" class="block text-gray-700 hover:text-red-700">Agregar Productos</a>
+    <a href="productos.php" class="block text-gray-700 hover:text-red-700">Productos</a>
+    <a href="categorias.php" class="block text-gray-700 hover:text-red-700">Categorías</a>
+    <a href="subcategorias.php" class="block text-gray-700 hover:text-red-700">Subcategorías</a>
+    <a href="marcas.php" class="block text-gray-700 hover:text-red-700">Marcas</a>
+    <a href="logout.php" class="block text-gray-700 hover:text-red-700">Salir</a>
   </div>
 </nav>

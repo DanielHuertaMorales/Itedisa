@@ -45,6 +45,7 @@ $username = $_SESSION['username'];
         <a href="productos.php" class="block bg-red-600 hover:bg-red-700 py-4 px-6 rounded-xl transition-all duration-300 text-lg font-semibold shadow-lg">📦 Productos</a>
         <a href="categorias.php" class="block bg-red-600 hover:bg-red-700 py-4 px-6 rounded-xl transition-all duration-300 text-lg font-semibold shadow-lg">📂 Categorías</a>
         <a href="subcategorias.php" class="block bg-red-600 hover:bg-red-700 py-4 px-6 rounded-xl transition-all duration-300 text-lg font-semibold shadow-lg">📑 Subcategorías</a>
+        <a href="marcas.php" class="block bg-red-600 hover:bg-red-700 py-4 px-6 rounded-xl transition-all duration-300 text-lg font-semibold shadow-lg">🏷️ Marcas</a>
         <a href="logout.php" class="block bg-gray-800 hover:bg-gray-900 py-4 px-6 rounded-xl transition-all duration-300 text-lg font-semibold shadow-lg">🚪 Salir</a>
     </div>
 </div>
