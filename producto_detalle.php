@@ -94,11 +94,11 @@ $recomendados = $stmtRec->get_result();
           <?php endif; ?>
           <div class="flex space-x-4 mt-6">
               <?php if (!empty($producto['ficha_tecnica_url'])): ?>
-                  <a href="<?php echo htmlspecialchars($producto['ficha_tecnica_url']); ?>" 
-                      target="_blank" 
-                      class="inline-block px-5 py-2 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 hover:scale-105 transform transition duration-300">
-                      📄 Ver ficha técnica
-                  </a>
+                <a href="<?php echo '/industrial-website/assets/fichas/' . htmlspecialchars($producto['ficha_tecnica_url']); ?>" 
+                    target="_blank" 
+                    class="inline-block px-5 py-2 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 hover:scale-105 transform transition duration-300">
+                    📄 Ver ficha técnica
+                </a>
               <?php endif; ?>
 
               <!-- Botón Cotizar -->

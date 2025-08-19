@@ -8,22 +8,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('assets/fondo.png');">
-  <style>
-    /* Animación fade-out 
-  #splash-screen {
-    transition: opacity 1s ease;
-    opacity: 1;
-  }
-
-  #splash-screen.fade-out {
-    opacity: 0;
-    pointer-events: none;
-  }*/
-  </style>
-  <!--<div id="splash-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
-    <img src="assets/logotipo.png" alt="ITEDISA" class="w-48 h-auto animate-pulse">
-  </div>-->
-
   <?php include 'menu.php'; ?>
 
   <!-- Contenido principal con margen para el navbar -->

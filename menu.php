@@ -54,4 +54,18 @@
     <a href="contacto.php" class="block text-gray-700 hover:text-red-700">Contáctanos</a>
     <a href="cotizar.php" class="block text-gray-700 hover:text-red-700">🛒 Cotización</a>
   </div>
+
+<script>
+  window.addEventListener('load', function () {
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>
+
 </nav>

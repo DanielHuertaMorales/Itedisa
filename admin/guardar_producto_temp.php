@@ -85,22 +85,22 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 // ========== 📄 Subir ficha técnica (PDF) ==========
 $ficha_tecnica_url = null;
 
-if (isset($_FILES['ficha_tecnica']) && $_FILES['ficha_tecnica']['error'] === UPLOAD_ERR_OK) {
-    $extension = strtolower(pathinfo($_FILES['ficha_tecnica']['name'], PATHINFO_EXTENSION));
+if (isset($_FILES['ficha_tecnica_file']) && $_FILES['ficha_tecnica_file']['error'] === UPLOAD_ERR_OK) {
+    $extension = strtolower(pathinfo($_FILES['ficha_tecnica_file']['name'], PATHINFO_EXTENSION));
     if ($extension !== 'pdf') {
         error_log("Archivo inválido: no es PDF.");
     } else {
-        $nombreArchivoFicha = time() . '_' . preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', basename($_FILES['ficha_tecnica']['name']));
+        $nombreArchivoFicha = time() . '_' . preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', basename($_FILES['ficha_tecnica_file']['name']));
         $directorioDestino = __DIR__ . '/../assets/fichas/';
         $rutaDestinoFicha = $directorioDestino . $nombreArchivoFicha;
-        $rutaWebFicha = '../assets/fichas/' . $nombreArchivoFicha;
 
         if (!is_dir($directorioDestino)) {
             mkdir($directorioDestino, 0777, true);
         }
 
-        if (move_uploaded_file($_FILES['ficha_tecnica']['tmp_name'], $rutaDestinoFicha)) {
-            $ficha_tecnica_url = $rutaWebFicha;
+        if (move_uploaded_file($_FILES['ficha_tecnica_file']['tmp_name'], $rutaDestinoFicha)) {
+            // ✅ GUARDAMOS SOLO EL NOMBRE DEL ARCHIVO
+            $ficha_tecnica_url = $nombreArchivoFicha;
         } else {
             error_log("Error al mover la ficha técnica.");
         }

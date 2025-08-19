@@ -134,7 +134,7 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
       <td class="border p-2"><?= htmlspecialchars($prod['caracteristicas']) ?></td>
       <td class="border p-2 text-center">
         <?php if (!empty($prod['ficha_tecnica_url'])): ?>
-          <a href="<?= '../admin/assets/fichas/' . htmlspecialchars($prod['ficha_tecnica_url']) ?>" target="_blank">
+          <a href="<?= '../assets/fichas/' . htmlspecialchars($prod['ficha_tecnica_url']) ?>" target="_blank">
             📄
           </a>
         <?php else: ?>

@@ -1,5 +1,6 @@
-// Manejo del menú móvil
+// Manejo general del sitio web
 document.addEventListener('DOMContentLoaded', () => {
+  // Menú móvil
   const menuBtn = document.getElementById('menuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
 
@@ -15,63 +16,71 @@ document.addEventListener('DOMContentLoaded', () => {
     langSelect.addEventListener('change', (e) => {
       const lang = e.target.value;
       alert(`Idioma seleccionado: ${lang === 'es' ? 'Español' : 'English'}`);
-      // Aquí puedes implementar cambio de idioma real
+      // Implementa aquí el cambio real de idioma si lo deseas
     });
   }
 
-  // Manejar sombra en navbar al hacer scroll
+  // Sombra al hacer scroll
   const navbar = document.querySelector('nav');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  });
-
-  // Código del carrusel:
-  const slides = document.querySelectorAll('#carousel-images img'); // Cambié selector
-  let currentIndex = 0;
-  const total = slides.length;
-  const intervalTime = 5000; // 5 segundos
-  let slideInterval;
-
-  function showSlide(index) {
-    slides.forEach((img, i) => {
-      img.style.opacity = i === index ? '1' : '0'; // Usamos opacidad
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
     });
   }
 
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % total;
+  // Carrusel de imágenes
+  const slides = document.querySelectorAll('#carousel-images img');
+  if (slides.length > 0) {
+    let currentIndex = 0;
+    const total = slides.length;
+    const intervalTime = 5000;
+    let slideInterval;
+
+    function showSlide(index) {
+      slides.forEach((img, i) => {
+        img.style.opacity = i === index ? '1' : '0';
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % total;
+      showSlide(currentIndex);
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + total) % total;
+      showSlide(currentIndex);
+    }
+
+    function resetInterval() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, intervalTime);
+    }
+
+    // Inicializar carrusel
     showSlide(currentIndex);
-  }
-
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + total) % total;
-    showSlide(currentIndex);
-  }
-
-  // Inicializar
-  showSlide(currentIndex);
-  slideInterval = setInterval(nextSlide, intervalTime);
-
-  // Botones
-  const nextBtn = document.getElementById('nextBtn');
-  const prevBtn = document.getElementById('prevBtn');
-
-  nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetInterval();
-  });
-
-  prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetInterval();
-  });
-
-  function resetInterval() {
-    clearInterval(slideInterval);
     slideInterval = setInterval(nextSlide, intervalTime);
+
+    // Botones del carrusel
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetInterval();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetInterval();
+      });
+    }
   }
 });
