@@ -8,11 +8,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('assets/fondo.png');">
+  <style>
+    /* Animación fade-out 
+  #splash-screen {
+    transition: opacity 1s ease;
+    opacity: 1;
+  }
+
+  #splash-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }*/
+  </style>
+  <!--<div id="splash-screen" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <img src="assets/logotipo.png" alt="ITEDISA" class="w-48 h-auto animate-pulse">
+  </div>-->
 
   <?php include 'menu.php'; ?>
 
   <!-- Contenido principal con margen para el navbar -->
-  <main class="pt-[100px] md:pt-[120px] px-4 pb-10">
+  <main id="mainContent" class="pt-[100px] md:pt-[120px] px-4 pb-10">
     
     <!-- Carrusel -->
     <section class="relative w-full max-h-[900px] overflow-hidden">
@@ -103,31 +118,6 @@
       </div>
     </section>
 
-    <!-- Testimonios -->
-    <section class="bg-gray-100 py-16">
-      <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-4xl sm:text-5xl font-bold text-red-600 mb-12">Lo que dicen nuestros clientes</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Testimonio 1 -->
-          <div class="bg-white rounded-2xl shadow-xl p-6">
-            <p class="text-gray-700 mb-4 italic">"Excelente atención al cliente y productos de alta calidad. Muy satisfechos con la entrega rápida."</p>
-            <div class="font-bold text-red-700">Ingeniería Futura S.A.</div>
-          </div>
-          <!-- Testimonio 2 -->
-          <div class="bg-white rounded-2xl shadow-xl p-6">
-            <p class="text-gray-700 mb-4 italic">"ITEDISA se convirtió en nuestro proveedor principal por su profesionalismo y puntualidad."</p>
-            <div class="font-bold text-red-700">Proyectos Industriales MX</div>
-          </div>
-          <!-- Testimonio 3 -->
-          <div class="bg-white rounded-2xl shadow-xl p-6">
-            <p class="text-gray-700 mb-4 italic">"Productos confiables y un equipo que realmente entiende nuestras necesidades técnicas."</p>
-            <div class="font-bold text-red-700">Soluciones Petroquímicas</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
     <!-- Marcas -->
     <section class="w-full h-[220px] md:h-[300px] bg-[url('assets/marcas.png')] bg-cover bg-center bg-no-repeat md:bg-fixed relative group">
       <div class="absolute inset-0 bg-black/60 transition duration-500 group-hover:backdrop-blur-sm group-hover:bg-black/70"></div>
@@ -143,61 +133,63 @@
       </div>
     </section>
 
-    <!-- Servicios -->
-    <section class="py-16 bg-white">
-      <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-4xl sm:text-5xl font-bold text-red-600 mb-12">Nuestros Servicios</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
-            <h3 class="text-2xl font-bold mb-3 text-gray-800">Asesoría técnica</h3>
-            <p class="text-gray-700">Te ayudamos a elegir el producto ideal según tus necesidades específicas y condiciones técnicas.</p>
-          </div>
-          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
-            <h3 class="text-2xl font-bold mb-3 text-gray-800">Instalación y puesta en marcha</h3>
-            <p class="text-gray-700">Contamos con personal técnico capacitado para garantizar una instalación correcta y segura.</p>
-          </div>
-          <div class="bg-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition">
-            <h3 class="text-2xl font-bold mb-3 text-gray-800">Capacitación</h3>
-            <p class="text-gray-700">Brindamos entrenamientos para que tu equipo opere con confianza los equipos adquiridos.</p>
+    <!-- Productos más vendidos -->
+    <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center text-red-600 mb-10">Productos más vendidos</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+        
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+          <img src="assets/img/productos/Bombax100.jpg" alt="Producto 1" class="w-full h-40 md:h-48 object-cover">
+          <div class="p-4 md:p-6">
+            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-2 py-0.5 rounded-full mb-2">Marca: XBrand</span>
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-1 md:mb-2">Bomba Centrífuga X100</h3>
+            <p class="text-sm md:text-base text-gray-700 mb-3 md:mb-4 leading-relaxed">Alta eficiencia y durabilidad para aplicaciones industriales exigentes.</p>
+            <a href="marca.php?marca=XBrand" class="block text-center bg-red-600 text-white text-sm md:text-base px-4 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-red-700 transition-colors w-full md:w-auto">
+              Ver más
+            </a>
           </div>
         </div>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+          <img src="assets/img/productos/valvula.jpg" alt="Producto 2" class="w-full h-40 md:h-48 object-cover">
+          <div class="p-4 md:p-6">
+            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-2 py-0.5 rounded-full mb-2">Marca: FlowTech</span>
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-1 md:mb-2">Válvula de Control V300</h3>
+            <p class="text-sm md:text-base text-gray-700 mb-3 md:mb-4 leading-relaxed">Precisión y confiabilidad para controlar el flujo en tus procesos.</p>
+            <a href="marca.php?marca=FlowTech" class="block text-center bg-red-600 text-white text-sm md:text-base px-4 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-red-700 transition-colors w-full md:w-auto">
+              Ver más
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+          <img src="assets/img/productos/filtro.jpg" alt="Producto 3" class="w-full h-40 md:h-48 object-cover">
+          <div class="p-4 md:p-6">
+            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-2 py-0.5 rounded-full mb-2">Marca: CleanPro</span>
+            <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-1 md:mb-2">Filtro Industrial FX200</h3>
+            <p class="text-sm md:text-base text-gray-700 mb-3 md:mb-4 leading-relaxed">Rendimiento superior para mantener tus sistemas limpios y eficientes.</p>
+            <a href="marca.php?marca=CleanPro" class="block text-center bg-red-600 text-white text-sm md:text-base px-4 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-red-700 transition-colors w-full md:w-auto">
+              Ver más
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
 
 
-    <!-- Productos más vendidos -->
-    <section class="max-w-[1600px] mx-auto px-4 md:px-10 py-16">
-      <h2 class="text-4xl sm:text-5xl font-bold text-center text-red-600 mb-12 md:mb-16">Productos más vendidos</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300">
-          <img src="assets/img/productos/Bombax100.jpg" alt="Producto 1" class="w-full h-60 md:h-[300px] object-cover">
-          <div class="p-6 md:p-8">
-            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full mb-3">Marca: XBrand</span>
-            <h3 class="text-xl md:text-3xl font-semibold text-gray-800 mb-2 md:mb-3">Bomba Centrífuga X100</h3>
-            <p class="text-sm md:text-lg text-gray-700 mb-4 md:mb-6">Alta eficiencia y durabilidad para aplicaciones industriales exigentes.</p>
-            <button class="bg-red-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-full hover:bg-red-700 transition-colors">Ver más</button>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300">
-          <img src="assets/img/productos/valvula.jpg" alt="Producto 2" class="w-full h-60 md:h-[300px] object-cover">
-          <div class="p-6 md:p-8">
-            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full mb-3">Marca: FlowTech</span>
-            <h3 class="text-xl md:text-3xl font-semibold text-gray-800 mb-2 md:mb-3">Válvula de Control V300</h3>
-            <p class="text-sm md:text-lg text-gray-700 mb-4 md:mb-6">Precisión y confiabilidad para controlar el flujo en tus procesos.</p>
-            <button class="bg-red-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-full hover:bg-red-700 transition-colors">Ver más</button>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden hover:scale-105 transition-transform duration-300">
-          <img src="assets/img/productos/filtro.jpg" alt="Producto 3" class="w-full h-60 md:h-[300px] object-cover">
-          <div class="p-6 md:p-8">
-            <span class="inline-block bg-red-600 text-white text-xs md:text-sm font-semibold px-3 py-1 rounded-full mb-3">Marca: CleanPro</span>
-            <h3 class="text-xl md:text-3xl font-semibold text-gray-800 mb-2 md:mb-3">Filtro Industrial FX200</h3>
-            <p class="text-sm md:text-lg text-gray-700 mb-4 md:mb-6">Rendimiento superior para mantener tus sistemas limpios y eficientes.</p>
-            <button class="bg-red-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-full hover:bg-red-700 transition-colors">Ver más</button>
-          </div>
-        </div>
+    <!-- Noticias del sector -->
+    <section class="max-w-6xl mx-auto px-4 md:px-10 py-20 bg-white rounded-3xl shadow-2xl border border-red-300 mb-24">
+      <h2 class="text-5xl font-extrabold text-center text-red-700 mb-14 tracking-wide drop-shadow-md">
+        📰 Noticias del sector industrial
+      </h2>
+      <div>
+        <?php include 'noticias.php'; ?>
+      </div>
+      <div class="text-center mt-10">
+        <a href="https://news.google.com/search?q=industria+petrolera+m%C3%A9xico" target="_blank" class="inline-block bg-red-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-red-800 transition">
+          Ver más noticias
+        </a>
       </div>
     </section>
 
@@ -209,7 +201,6 @@
         <a href="contacto.php" class="bg-white text-red-700 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition">Solicita tu cotización</a>
       </div>
     </section>
-
   </main>
 
   <!-- Footer -->
@@ -234,5 +225,54 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <!--<script>
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splash-screen');
+      const mainContent = document.getElementById('mainContent');
+
+      // Después de 5 segundos ocultamos splash y mostramos contenido
+      setTimeout(() => {
+        splash.classList.add('fade-out'); // Define esta clase en CSS para la transición
+        mainContent.style.visibility = 'visible';
+      }, 2500);
+
+      // Después de la transición removemos splash
+      splash.addEventListener('transitionend', () => {
+        console.log('Transición terminada, removiendo splash');
+        splash.remove();
+      });
+    });
+  </script>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const splash = document.getElementById('splash-screen');
+    const mainContent = document.getElementById('mainContent');
+
+    const splashShown = sessionStorage.getItem('splashShown');
+
+    if (!splashShown) {
+      // Mostrar splash
+      setTimeout(() => {
+        splash.classList.add('fade-out');
+        mainContent.style.visibility = 'visible';
+      }, 5000); // 5 segundos
+
+      splash.addEventListener('transitionend', () => {
+        splash.remove();
+      });
+
+      // Marcamos como ya mostrado
+      sessionStorage.setItem('splashShown', 'true');
+    } else {
+      // Si ya se mostró, ocultamos splash y mostramos contenido de inmediato
+      splash.remove();
+      mainContent.style.visibility = 'visible';
+    }
+  });
+</script>-->
+
+
+
 </body>
 </html>

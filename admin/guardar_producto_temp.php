@@ -93,7 +93,7 @@ if (isset($_FILES['ficha_tecnica']) && $_FILES['ficha_tecnica']['error'] === UPL
         $nombreArchivoFicha = time() . '_' . preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', basename($_FILES['ficha_tecnica']['name']));
         $directorioDestino = __DIR__ . '/../assets/fichas/';
         $rutaDestinoFicha = $directorioDestino . $nombreArchivoFicha;
-        $rutaWebFicha = 'assets/fichas/' . $nombreArchivoFicha;
+        $rutaWebFicha = '../assets/fichas/' . $nombreArchivoFicha;
 
         if (!is_dir($directorioDestino)) {
             mkdir($directorioDestino, 0777, true);

@@ -86,6 +86,7 @@ $marcas = mysqli_query($conexion, "SELECT id, nombre FROM marcas ORDER BY nombre
   <div>
     <label>Imagen</label>
     <input type="file" name="imagen" id="imagen" class="border rounded w-full p-2" accept=".jpg,.jpeg,.png,.gif,.webp">
+    <img id="previewImagen" class="mt-2 max-h-24" src="" style="display:none;">
   </div>
 
   <div class="col-span-2 flex justify-end">
@@ -196,10 +197,30 @@ function cargarDatosEnFormulario(prod, index) {
   document.getElementById('descripcion').value = prod.descripcion;
   document.getElementById('categoria_id').value = prod.categoria_id;
   document.getElementById('marca_id').value = prod.marca_id;
-  document.getElementById('subcategoria_id').value = prod.subcategoria_id ?? '';
   document.getElementById('caracteristicas').value = prod.caracteristicas;
   document.getElementById('ficha_tecnica_url').value = prod.ficha_tecnica_url || '';
-  // Imagen no puede precargarse en input file por seguridad
+  if (prod.imagen) {
+    document.getElementById('previewImagen').src = 'ruta/a/imagenes/' + prod.imagen;
+    document.getElementById('previewImagen').style.display = 'block';
+  } else {
+    document.getElementById('previewImagen').style.display = 'none';
+  }
+
+  // Primero cargamos subcategorías vía AJAX y luego seleccionamos
+  $.ajax({
+    url: 'obtener_subcategorias_por_categoria.php',
+    method: 'GET',
+    data: { categoria_id: prod.categoria_id },
+    success: function(data){
+      let options = '<option value="">(Ninguna)</option>';
+      data.forEach(subcat => {
+        options += `<option value="${subcat.id}">${subcat.nombre}</option>`;
+      });
+      $('#subcategoria_id').html(options);
+      $('#subcategoria_id').val(prod.subcategoria_id ?? '');
+    }
+  });
+
   indexEditarInput.value = index;
   btnEnviar.textContent = 'Actualizar producto';
   btnCancelarEdicion.classList.remove('hidden');
@@ -217,6 +238,19 @@ function resetFormulario() {
 function cargarTabla() {
   location.reload();
 }
+
+document.getElementById('imagen').addEventListener('change', function (event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const preview = document.getElementById('previewImagen');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
 
 // Evento editar
 document.addEventListener('click', function(e){

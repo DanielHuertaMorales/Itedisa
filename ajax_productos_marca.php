@@ -47,12 +47,14 @@ if ($result->num_rows === 0) {
 }
 
 while ($producto = $result->fetch_assoc()) {
-  echo "
-  <div class='bg-white rounded-2xl shadow-md p-4 hover:shadow-xl transition-all duration-300'>
-    <img src='assets/img/productos/" . htmlspecialchars($producto['imagen']) . "' alt='" . htmlspecialchars($producto['nombre']) . "' class='w-full h-48 object-contain mb-4 rounded-lg'>
-    <h3 class='text-md font-semibold text-gray-900'>" . htmlspecialchars($producto['nombre']) . "</h3>
-    <span class='inline-block mt-2 px-3 py-1 text-xs font-semibold text-white bg-red-600 rounded-full'>" . htmlspecialchars($producto['categoria']) . "</span>
-  </div>
-  ";
+    echo "
+    <a href='producto_detalle.php?id=" . $producto['id'] . "' class='block'>
+      <div class='bg-white rounded-2xl shadow-md p-4 hover:shadow-xl transition-all duration-300'>
+        <img src='assets/img/productos/" . htmlspecialchars($producto['imagen']) . "' alt='" . htmlspecialchars($producto['nombre']) . "' class='w-full h-48 object-contain mb-4 rounded-lg'>
+        <h3 class='text-md font-semibold text-gray-900'>" . htmlspecialchars($producto['nombre']) . "</h3>
+        <span class='inline-block mt-2 px-3 py-1 text-xs font-semibold text-white bg-red-600 rounded-full'>" . htmlspecialchars($producto['categoria']) . "</span>
+      </div>
+    </a>
+    ";
 }
 ?>
